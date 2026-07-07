@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De grote is-dit-AI-of-niet-test — Werkwoorden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #6B53DD;
+    --purple-mid: #9E8AE9;
+    --purple-light: #F4F2FD;
+    --purple-dark: #2d2060;
+    --lime: #D5FE40;
+    --lime-dark: #B4E100;
+    --white: #ffffff;
+    --grey: #f7f7f7;
+    --text: #1a1a2e;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+  }
+  .wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 0.75rem; }
+  .screen { display: none; animation: fadeUp 0.45s ease both; }
+  .screen.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .screen-purple {
+    background: var(--purple);
+    border-radius: 24px;
+    padding: 2.5rem 3rem;
+    color: white;
+    text-align: left;
+  }
+  .accent-rule { width: 32px; height: 4px; background: var(--lime); border-radius: 2px; margin-bottom: 1rem; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.75rem; }
+  .screen-purple h1 { font-weight: 700; font-size: 2rem; line-height: 1.2; margin-bottom: 1.5rem; }
+  .screen-purple p { font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.88); margin-bottom: 1rem; max-width: 600px; }
+  .screen-question {
+    background: var(--white);
+    border: 1px solid #ECEAF7;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 1px 3px rgba(45,32,96,0.06);
+    text-align: center;
+  }
+  .progress-label { font-size: 13px; color: var(--purple-mid); font-weight: 600; margin-bottom: 0.75rem; }
+  .progress-bar { width: 100%; max-width: 500px; height: 4px; background: var(--purple-light); border-radius: 4px; margin: 0 auto 2rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--purple-mid); border-radius: 4px; transition: width 0.4s ease; }
+  .q-tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purple); background: var(--purple-light); padding: 4px 12px; border-radius: 20px; margin-bottom: 1.25rem; }
+  .q-sentence { font-weight: 600; font-size: 1.35rem; line-height: 1.45; color: var(--purple-dark); margin: 0 auto 2rem; max-width: 520px; }
+  .q-options { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+  .q-option { background: var(--grey); border: 2px solid transparent; border-radius: 14px; padding: 0.875rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; color: var(--text); cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s; }
+  .q-option:hover { background: var(--purple-light); border-color: var(--purple-mid); transform: translateY(-1px); }
+  .screen-feedback { background: var(--purple-light); border-radius: 24px; padding: 2.5rem; text-align: center; }
+  .fb-tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 1rem; }
+  .fb-tag.correct { background: #e0f4e0; color: #1a5c1a; }
+  .fb-tag.wrong { background: #ffe0e0; color: #8b2020; }
+  .fb-title { font-weight: 700; font-size: 1.25rem; color: var(--purple-dark); margin-bottom: 0.75rem; line-height: 1.3; }
+  .fb-body { font-size: 15px; color: #333; line-height: 1.75; max-width: 560px; margin: 0 auto; }
+  .btn-lime, .btn-purple {
+    display: inline-flex; align-items: center; gap: 8px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    padding: 0.875rem 1.75rem; border-radius: 12px; cursor: pointer; margin-top: 1.5rem;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-lime { background: var(--lime); color: #1a1a1a; }
+  .btn-lime:hover { background: var(--lime-dark); transform: translateY(-1px); }
+  .btn-purple { background: var(--purple); color: white; }
+  .btn-purple:hover { background: var(--purple-dark); transform: translateY(-1px); }
+  .score-number { font-weight: 700; font-size: 3.5rem; color: var(--lime); line-height: 1; margin-bottom: 0.75rem; }
+  .score-caption { font-size: 15px; color: rgba(255,255,255,0.88); margin: 0 auto 2rem; max-width: 520px; text-align: center; }
+  @media (max-width: 640px) {
+    body { padding: 1.5rem 0.75rem; }
+    .screen-purple { padding: 2rem 1.5rem; border-radius: 18px; }
+    .screen-feedback, .screen-question { padding: 2rem 1.5rem; border-radius: 18px; }
+    .screen-purple h1 { font-size: 1.5rem; }
+    .q-sentence { font-size: 1.15rem; }
+    .fb-title { font-size: 1.1rem; }
+    .score-number { font-size: 2.75rem; }
+    .btn-lime, .btn-purple { padding: 0.875rem 1.5rem; }
+  }
+  @media (max-width: 380px) {
+    .screen-purple { padding: 1.75rem 1.25rem; }
+    .screen-purple h1 { font-size: 1.35rem; }
+    .q-sentence { font-size: 1.05rem; }
+    .q-option { padding: 0.75rem 1rem; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="screen screen-purple active" id="screen-intro">
+    <div class="accent-rule"></div>
+    <div class="eyebrow">Werkwoorden</div>
+    <h1>De grote is-dit-AI-of-niet-test</h1>
+    <p>De gemiddelde communicatieadviseur heeft hem inmiddels ontwikkeld. Een ingebouwde AI-radar. Je voelt een ChatGPT-post al aankomen voordat je de eerste drie woorden hebt gelezen. Het is bijna een kunst geworden: wie spot 'm het snelst?</p>
+    <p>Het goede nieuws? We zijn allemaal nog steeds gek op een goed verhaal. Misschien nu zelfs meer dan vroeger, juist omdat ze schaarser worden. Maar vallen ze jou nog wel op? Of zie jij door alle AI-teksten het bos niet meer?</p>
+    <p>Dus bij deze een kleine uitdaging voor je radar. Vijf zinnen, twee minuten. Eens kijken of jij de echte zinnen nog weet te onderscheiden van AI.</p>
+    <button class="btn-lime" data-goto="q1">Start de test →</button>
+  </div>
+
+  <div class="screen screen-question" id="screen-q1">
+    <div class="progress-label">Vraag 1 van 5</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    <div class="q-tag">Mens of AI?</div>
+    <div class="q-sentence">"De harde waarheid? Goede zorg vraagt meer dan protocollen. Niet omdat de regels er niet toe doen – maar omdat mensen meer zijn dan een dossier."</div>
+    <div class="q-options">
+      <button class="q-option" data-qid="q1" data-choice="human" data-correct="ai">Dit is een echt verhaal</button>
+      <button class="q-option" data-qid="q1" data-choice="ai" data-correct="ai">Dit is AI-geschreven</button>
+    </div>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb1-correct">
+    <div class="fb-tag correct">Goed</div>
+    <div class="fb-title">Goed gezien</div>
+    <div class="fb-body">Hier zie je een klassieke AI-opbouw: een dramatische opener, dan een net-iets-te-mooi koppelteken-statement. Zonder naam, plek of specifiek moment. En de 'niet omdat... maar omdat...'-constructie maakt het af.</div>
+    <button class="btn-purple" data-goto="q2">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb1-wrong">
+    <div class="fb-tag wrong">Helaas</div>
+    <div class="fb-title">Toch even goed kijken!</div>
+    <div class="fb-body">Dit was AI. Let de volgende keer op dat koppelteken en op de "niet omdat... maar omdat..."-constructie. Hier maakt AI maar wat graag gebruik van.</div>
+    <button class="btn-purple" data-goto="q2">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-question" id="screen-q2">
+    <div class="progress-label">Vraag 2 van 5</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+    <div class="q-tag">Mens of AI?</div>
+    <div class="q-sentence">"'s Ochtends koffie op kantoor, de dag doornemen, daarna de wijk in. Druk soms. Maar aan het einde van de dag, als de cliënten goed geholpen zijn, heb ik een voldaan gevoel."</div>
+    <div class="q-options">
+      <button class="q-option" data-qid="q2" data-choice="human" data-correct="human">Dit is een echt verhaal</button>
+      <button class="q-option" data-qid="q2" data-choice="ai" data-correct="human">Dit is AI-geschreven</button>
+    </div>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb2-correct">
+    <div class="fb-tag correct">Goed</div>
+    <div class="fb-title">Goed gezien</div>
+    <div class="fb-body">Dit is Annette, verzorgende bij Aafje. Ze vertelde hoe haar dag eruitziet. Die details, dat is precies wat een echt verhaal onderscheidt.</div>
+    <button class="btn-purple" data-goto="q3">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb2-wrong">
+    <div class="fb-tag wrong">Helaas</div>
+    <div class="fb-title">Verrassing!</div>
+    <div class="fb-body">Dit was gewoon een mens: Annette, verzorgende bij Aafje. Ook een echt verhaal kan uit korte zinnen bestaan, daar heeft AI geen patent op.</div>
+    <button class="btn-purple" data-goto="q3">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-question" id="screen-q3">
+    <div class="progress-label">Vraag 3 van 5</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+    <div class="q-tag">Mens of AI?</div>
+    <div class="q-sentence">"Er zijn ouders en kinderen die elkaar soms heel lang niet hebben gezien. Die momenten waarop dat contact hier weer tot bloei komt, daar doe ik dit werk voor."</div>
+    <div class="q-options">
+      <button class="q-option" data-qid="q3" data-choice="human" data-correct="human">Dit is een echt verhaal</button>
+      <button class="q-option" data-qid="q3" data-choice="ai" data-correct="human">Dit is AI-geschreven</button>
+    </div>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb3-correct">
+    <div class="fb-tag correct">Goed</div>
+    <div class="fb-title">Goed gezien</div>
+    <div class="fb-body">Dit is Lidia, omgangsbegeleider bij Cardea. Ze begeleidt bezoeken tussen ouders en kinderen die elkaar niet zomaar kunnen zien. Deze zinnen vertelde ze me voor de eerste pilot van Werkwoorden.</div>
+    <button class="btn-purple" data-goto="q4">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb3-wrong">
+    <div class="fb-tag wrong">Helaas</div>
+    <div class="fb-title">Niet helemaal!</div>
+    <div class="fb-body">Dit was een mens: Lidia, omgangsbegeleider bij Cardea. Ze begeleidt bezoeken tussen ouders en kinderen die elkaar niet zomaar kunnen zien.</div>
+    <button class="btn-purple" data-goto="q4">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-question" id="screen-q4">
+    <div class="progress-label">Vraag 4 van 5</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+    <div class="q-tag">Mens of AI?</div>
+    <div class="q-sentence">"En eerlijk? Dit werk is zwaar. Maar als ik zie hoeveel impact we maken, weet ik weer waarom ik dit doe."</div>
+    <div class="q-options">
+      <button class="q-option" data-qid="q4" data-choice="human" data-correct="ai">Dit is een echt verhaal</button>
+      <button class="q-option" data-qid="q4" data-choice="ai" data-correct="ai">Dit is AI-geschreven</button>
+    </div>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb4-correct">
+    <div class="fb-tag correct">Goed</div>
+    <div class="fb-title">Betrapt, opnieuw!</div>
+    <div class="fb-body">"En eerlijk?" is inmiddels hét visitekaartje van een AI-post. En 'impact', ook zo'n woord dat overal en nergens over gaat. Niemand praat zo bij het koffieapparaat.</div>
+    <button class="btn-purple" data-goto="q5">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb4-wrong">
+    <div class="fb-tag wrong">Helaas</div>
+    <div class="fb-title">Ha, bijna goed!</div>
+    <div class="fb-body">Dit was AI. "En eerlijk?" vind je eigenlijk vooral in AI-teksten. Check je eigen teksten hier goed op, want dit geeft het echt meteen weg.</div>
+    <button class="btn-purple" data-goto="q5">Volgende vraag →</button>
+  </div>
+
+  <div class="screen screen-question" id="screen-q5">
+    <div class="progress-label">Vraag 5 van 5</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="q-tag">Mens of AI?</div>
+    <div class="q-sentence">"Na negen maanden was onze rol klaar. Het kindje had een betere plek gevonden, het onderwijsperspectief was duidelijk."</div>
+    <div class="q-options">
+      <button class="q-option" data-qid="q5" data-choice="human" data-correct="human">Dit is een echt verhaal</button>
+      <button class="q-option" data-qid="q5" data-choice="ai" data-correct="human">Dit is AI-geschreven</button>
+    </div>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb5-correct">
+    <div class="fb-tag correct">Goed</div>
+    <div class="fb-title">Goed gezien</div>
+    <div class="fb-body">Dit is Leonie, ambulant gezinsbehandelaar bij Cardea. Negen maanden, een kindje, een betere plek. Dit zijn concrete details die je niet verzint.</div>
+    <button class="btn-lime" data-action="show-result">Bekijk je score →</button>
+  </div>
+
+  <div class="screen screen-feedback" id="screen-fb5-wrong">
+    <div class="fb-tag wrong">Helaas</div>
+    <div class="fb-title">Nee, toch niet!</div>
+    <div class="fb-body">Dit is Leonie, ambulant gezinsbehandelaar bij Cardea. Negen maanden, een kindje, een betere plek. Dit zijn details die AI niet verzint.</div>
+    <button class="btn-lime" data-action="show-result">Bekijk je score →</button>
+  </div>
+
+  <div class="screen screen-purple" id="screen-outro">
+    <div style="text-align:center;">
+      <div class="accent-rule" style="margin:0 auto 1rem;"></div>
+      <div class="eyebrow">Jouw resultaat</div>
+      <div class="score-number" id="score-number">0/5</div>
+      <div class="score-caption" id="score-caption"></div>
+      <button class="btn-lime" data-goto="outro-pitch">Klaar voor een echt verhaal? →</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-outro-pitch" style="background:#F4F2FD; border-radius:24px; padding:2.5rem; font-family:'DM Sans',sans-serif;">
+    <div style="text-align:center;">
+      <h2 style="font-family:'DM Sans',sans-serif; font-weight:700; font-size:1.4rem; color:#2d2060; margin-bottom:2rem; line-height:1.3;">De AI-zinnen? Die kennen we nu wel.</h2>
+      <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#333; line-height:1.75; margin-bottom:1rem;">Maar de echte verhalen? Die vind je in de wandelgangen. In de overdracht. Bij die ene collega die altijd net iets meer doet dan gevraagd. Tijd om ze het podium te geven dat ze verdienen.</p>
+      <p style="font-family:'DM Sans',sans-serif; font-size:14px; color:#333; line-height:1.75; margin-bottom:2rem;">De beste verhalen schrijven zichzelf niet. Maar wel bijna. Met Werkwoorden haal ik ze voor je op, elke maand opnieuw. Zo heb jij altijd een echt verhaal om te delen.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; justify-content:center;">
+        <button data-href="https://werk-woorden.nl/" style="font-family:'DM Sans',sans-serif; background:#D5FE40; color:#1a1a1a; border:none; border-radius:12px; padding:0.875rem 1.75rem; font-size:15px; font-weight:600; cursor:pointer;">Eens kennismaken? →</button>
+        <button data-goto="intro" style="font-family:'DM Sans',sans-serif; background:#ffffff; border:1px solid #dddddd; border-radius:12px; padding:0.875rem 1.5rem; font-size:14px; font-weight:500; color:#444444; cursor:pointer;">Test opnieuw doen</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+(function () {
+  function init() {
+    var score = 0;
+    function goTo(id) {
+      document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+      var target = document.getElementById('screen-' + id);
+      if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+    }
+    function answer(qid, userChoice, correctType) {
+      var isCorrect = userChoice === correctType;
+      if (isCorrect) score++;
+      goTo('fb' + qid.replace('q', '') + (isCorrect ? '-correct' : '-wrong'));
+    }
+    function showResult() {
+      document.getElementById('score-number').textContent = score + '/5';
+      var caption;
+      if (score === 5) caption = 'Niemand houdt jou voor de gek. Jij spot een AI-zin op honderd meter afstand.';
+      else if (score >= 3) caption = 'Jij hebt een scherp oog. Je voelt het verschil haarfijn aan, al wordt zelfs jij weleens op het verkeerde been gezet.';
+      else caption = 'Niet erg, zelfs ervaren communicatieprofessionals vergissen zich nog weleens. Nu weet je beter waar je op moet letten.';
+      document.getElementById('score-caption').textContent = caption;
+      goTo('outro');
+    }
+    var sentinel = document.querySelector('[data-goto]');
+    if (!sentinel) return false;
+    var container = document.querySelector('.wrap') || document;
+    container.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-goto]');
+      if (el) { goTo(el.getAttribute('data-goto')); return; }
+      el = e.target.closest('[data-qid]');
+      if (el) { answer(el.getAttribute('data-qid'), el.getAttribute('data-choice'), el.getAttribute('data-correct')); return; }
+      el = e.target.closest('[data-action="show-result"]');
+      if (el) { showResult(); return; }
+      el = e.target.closest('[data-href]');
+      if (el) { window.open(el.getAttribute('data-href'), '_blank'); return; }
+    });
+    return true;
+  }
+  if (!init()) {
+    document.addEventListener('DOMContentLoaded', init);
+    var tries = 0;
+    var interval = setInterval(function () {
+      tries++;
+      if (init() || tries > 20) clearInterval(interval);
+    }, 250);
+  }
+})();
+</script>
+</body>
+</html>
